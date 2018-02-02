@@ -45,8 +45,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     // koniec z Chronometer
     int rhythmUser[] = new int [10];
     // kod - rytm
-    int rhythmCode[] = {250, 500, 500, 250};
+    int rhythmCode[] = {90, 80, 90, 80};
+    //int rhythmCode[] = {250, 500, 500, 250};
     int tolerRhythm = 100;
+
+    // zmienne do spr i zapisu kodorytmu
+    int startRytmu = 0;
+    int liczbaPukniec = 4;  //liczba udzerzeń w rytmie TODO ustalone na sztywno
+    int lpTap = 1; //liczba puknieć przez użytkownika
 
     // debug
     private static final String TAG = "MyActivity";
@@ -105,10 +111,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             @Override
             public void onClick(View v) {
                 //if the chronometer has not been instantiated before...
-
+                // TODO Test
+                Log.i(TAG, "MainActivity - uruchomiona metoda onClick" );
                 //boolean startRytmu = True;
+                /*
                 int startRytmu = 0;
-                int liczbaPukniec = 0;
+                int liczbaPukniec = 4;  //liczba udzerzeń w rytmie TODO ustalone na sztywno
+                int lpTap = 1; //liczba puknieć przez użytkownika
+                */
                 if(mRhythm == null) {
                     //instantiate the chronometer
                     mRhythm = new Rhythm(mContext);
@@ -127,12 +137,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
                     //boolean startRytmu = True;
                     startRytmu = 1; // poziom 1 włączenie spr kodu rytmu
+                    // TODO Test
+                    Log.i(TAG, "OnClcik 1 pukniecie" );
                 }
                 //boolean startRytmu = True;
                 //if(startRytmu == True){
                 if(startRytmu == 1){
                     // lap = rytm
-                    int lpTap = 1; //liczba puknieć przez użytkownika
+                    //int lpTap = 1; //liczba puknieć przez użytkownika
                     if(lpTap < liczbaPukniec ){
 
 
@@ -149,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                         mEtLaps.append("LAP " + String.valueOf(mLapCounter++)
                                 + "   " + mTvTimer.getText() + "\n");
                      */
-                        // kopiowanie do tabeli
+                        // kopiowanie do tabeli TODO Nie działa!!!!!!
                         int czas = Rhythm.milisekundy;
                         rhythmUser[liczbaPukniec] = czas;
                         //rhythmUser[liczbaPukniec] = Rhythm.milisekundy;
@@ -164,6 +176,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                             }
                         });
                         */
+                        lpTap ++; //zwieksza sie liczba pukniec
+                        // TODO Test
+                        Log.i(TAG, "onClick kolejne pukniecie" );
                     }
                     if(lpTap == liczbaPukniec ){
 
@@ -175,7 +190,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                             mThreadChrono = null;
                             //kill the chrono class
                             mRhythm = null;
-
+                            // TODO Test
+                            Log.i(TAG, "Ostatnie pukniceic !!! " );
                             // Sprawdanie kodu rytmu
                             checkRhythm();
 
@@ -249,14 +265,20 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     }
 
     public void checkRhythm(){
-            Log.i(TAG, "MyActivity - Odpala się checkBox " );
+            Log.i(TAG, "MyActivity - Odpala się checkRhythm " );
             System.out.println("MyActivity - Odpala się checkBox " );
             int spr = 0; //przechowuuje wartość różnicy w milisekundach
             int correctSpr[] = new int [10]; //przechowuje info czy rytm dobrze wsytukano, w dobrmy intwerwale, 1 - zgadza się kodorytm
             //boolean correctSpr[] = new int [10]; //przechowuje info czy rytm dobrze wsytukano, w dobrmy intwerwale, 1 - zgadza się kodorytm
             boolean okRhythm = false;
             for(int x=0; x<rhythmUser.length; x++ ){
-
+                if(x < liczbaPukniec -1 ){
+                    Log.i(TAG, "MyActivity - checkRhythm - Kodorytm: " + rhythmCode[x] + "Użytkownik: " + rhythmUser[x] );
+                } else {
+                    Log.i(TAG, "MyActivity - checkRhythm - Odwolanie do pustego indexu w tabeli = java.lang.ArrayIndexOutOfBoundsException: length=4; index=4 " );
+                    break;
+                }
+             //   Log.i(TAG, "MyActivity - checkRhythm - Kodorytm: " + rhythmCode[x] + "Użytkownik: " + rhythmUser[x] );
                 spr = Math.abs(rhythmCode[x] - rhythmUser[x]);
                 Log.i(TAG, "MyActivity - spr: " + spr);
                 if(spr < tolerRhythm){

@@ -1,6 +1,7 @@
 package com.blokada.rytmblokada;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * Created by tomek on 01.02.18.
@@ -13,6 +14,11 @@ public class Rhythm implements Runnable{
     public static final long MILLS_TO_HOURS = 3600000;
 
     public static int milisekundy = 0;
+
+    // debug
+    private static final String TAG = "MyActivity";
+
+    boolean testMillis = true; // TODO test millis
 
     /**
      * Context which is responsible for this instance of the class
@@ -85,6 +91,8 @@ public class Rhythm implements Runnable{
 
     @Override
     public void run() {
+        // TODO Test
+        Log.i(TAG, "Rhythm class - Działą Rhythm!!!! " );
         while(mIsRunning) {
             //We do not call ConvertTimeToString here because it will add some overhead
             //therefore we do the calculation without any function calls!
@@ -108,6 +116,11 @@ public class Rhythm implements Runnable{
             //Sleep the thread for a short amount, to prevent high CPU usage!
             try {
                 Thread.sleep(15);
+                // TODO Test
+                if(testMillis == true){
+                    Log.i(TAG, "Rhythm class - Run millis: " + millis);
+                    testMillis = false;
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
