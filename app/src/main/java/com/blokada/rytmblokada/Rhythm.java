@@ -47,7 +47,7 @@ public class Rhythm implements Runnable{
     }
 
     /**
-     * Starts the chronometer
+     * Starts the tap rhythm
      */
     public void start() {
         if(mStartTime == 0) { //if the start time was not set before! e.g. by second constructor
@@ -57,7 +57,7 @@ public class Rhythm implements Runnable{
     }
 
     /**
-     * Stops the chronometer
+     * Stops the tap rhythm
      */
     public void stop() {
         mIsRunning = false;
@@ -65,7 +65,7 @@ public class Rhythm implements Runnable{
 
 
     /**
-     * Check if the chronometer is running or not
+     * Check if the tap rhythm is running or not
      * @return true if running, false if not running
      */
     public boolean isRunning() {

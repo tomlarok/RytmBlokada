@@ -8,26 +8,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
+import java.util.function.ToDoubleBiFunction;
 
 
 public class MainActivity extends AppCompatActivity implements OnClickListener{
 
     // z Chronometer
     /**
-     * Key for getting saved start time of Chronometer class
+     * Key for getting saved start time of tap rhythm class
      * this is used for onResume/onPause/etc.
      */
     public static final String START_TIME = "START_TIME";
     /**
-     * Same story, but to tell whether the Chronometer was running or not
+     * Same story, but to tell whether the tap rhythm was running or not
      */
     public static final String CHRONO_WAS_RUNNING = "CHRONO_WAS_RUNNING";
     /**
-     * Same story, but if chronometer was stopped, we dont want to lose the stop time shows in
+     * Same story, but if tap rhythm was stopped, we dont want to lose the stop time shows in
      * the tv_timer
      */
     public static final String TV_TIMER_TEXT = "TV_TIMER_TEXT";
@@ -43,6 +46,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     int rhythmUser[] = new int [10];
     // kod - rytm
     int rhythmCode[] = {250, 500, 500, 250};
+    int tolerRhythm = 100;
+
+    // debug
+    private static final String TAG = "MyActivity";
 
 
     private Button lock, disable, enable, rytm;
@@ -58,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     //keep track of how many times btn_lap was clicked
     int mLapCounter = 1;
 
-    //Thread for chronometer
+    //Thread for tap rhythm class
     Thread mThreadChrono;
 
     //Reference to the MainActivity (this class!)
@@ -90,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         //mEtLaps.setEnabled(false); //prevent the et_laps to be editable
         //mSvLaps = (ScrollView) findViewById(R.id.sv_lap);
 
+        // TODO Test
+        Log.i(TAG, "Działa coś!!!!!!!!" );
 
         //btn_start click handler
         rytm.setOnClickListener(new View.OnClickListener() {
@@ -286,13 +295,35 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     }
 
     public void checkRhythm(){
-
-            int spr = 0;
+            Log.i(TAG, "MyActivity - Odpala się checkBox " );
+            System.out.println("MyActivity - Odpala się checkBox " );
+            int spr = 0; //przechowuuje wartość różnicy w milisekundach
+            int correctSpr[] = new int [10]; //przechowuje info czy rytm dobrze wsytukano, w dobrmy intwerwale, 1 - zgadza się kodorytm
+            //boolean correctSpr[] = new int [10]; //przechowuje info czy rytm dobrze wsytukano, w dobrmy intwerwale, 1 - zgadza się kodorytm
+            boolean okRhythm = false;
             for(int x=0; x<rhythmUser.length; x++ ){
 
-                spr = rhythmCode[x] - rhythmUser[x];
+                spr = Math.abs(rhythmCode[x] - rhythmUser[x]);
+                Log.i(TAG, "MyActivity - spr: " + spr);
+                if(spr < tolerRhythm){
+                    correctSpr[x] = 1;
+                    okRhythm = true;
+                    Log.i(TAG, "MyActivity Puknięcie Ok — okRhythm: " + okRhythm);
+                } else{
+                    correctSpr[x] = 0;
+                    okRhythm = false;
+                    Log.i(TAG, "MyActivity  ZŁE Puknięcie !!! — okRhythm: " + okRhythm);
+                    break; // przerwanie funkcji gdy jest zły kodorytm
+                }
+            }
 
-        }
+            if(okRhythm == true){
+                Toast.makeText(MainActivity.this, "Kodorytm poprawny!", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "MyActivity Kodorytm Ok, Oblokowano! — okRhythm: " + okRhythm);
+            } else {
+                Toast.makeText(MainActivity.this, "Zły kodorytm!", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "MyActivity ZŁY Kodorytm! — okRhythm: " + okRhythm);
+            }
     }
 
     public void tapRhythm() {
