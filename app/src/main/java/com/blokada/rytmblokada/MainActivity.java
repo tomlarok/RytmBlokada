@@ -186,54 +186,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 }
             }
         });
-/*
-        //btn_stop click handler
-        mBtnStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //if the chronometer had been instantiated before...
-                if(mChronometer != null) {
-                    //stop the chronometer
-                    mChronometer.stop();
-                    //stop the thread
-                    mThreadChrono.interrupt();
-                    mThreadChrono = null;
-                    //kill the chrono class
-                    mChronometer = null;
-                }
-            }
-        });
 
-        mBtnLap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //if chrono is not running we shouldn't capture the lap!
-                if(mChronometer == null) {
-                  /*
-                    Toast.makeText(mContext
-                            , R.string.warning_lap_button, Toast.LENGTH_SHORT).show();
-                    */
-        /*
-                    return; //do nothing!
-                }
-
-                //we just simply copy the current text of tv_timer and append it to et_laps
-                mEtLaps.append("LAP " + String.valueOf(mLapCounter++)
-                        + "   " + mTvTimer.getText() + "\n");
-
-                //scroll to the bottom of et_laps
-                mSvLaps.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSvLaps.smoothScrollTo(0, mEtLaps.getBottom());
-                    }
-                });
-            }
-        });
         // koniec z Chronometru
 
-                */
     }
 
     @Override
