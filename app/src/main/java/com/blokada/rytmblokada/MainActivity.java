@@ -186,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 }
             }
         });
-
         // koniec z Chronometru
 
     }
