@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.function.ToDoubleBiFunction;
@@ -45,20 +46,23 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     // koniec z Chronometer
     int rhythmUser[] = new int [10];
     // kod - rytm
-    int rhythmCode[] = {90, 80, 90, 80};
+    int rhythmCode[] = {500, 590, 590, 590};
     //int rhythmCode[] = {250, 500, 500, 250};
-    int tolerRhythm = 100;
+    int tolerRhythm = 200;  //300
 
     // zmienne do spr i zapisu kodorytmu
     int startRytmu = 0;
-    int liczbaPukniec = 4;  //liczba udzerzeń w rytmie TODO ustalone na sztywno
-    int lpTap = 1; //liczba puknieć przez użytkownika
+    int liczbaPukniec = 3;  //liczba udzerzeń w rytmie TODO ustalone na sztywno 4
+    int lpTap = 0; //liczba puknieć przez użytkownika TODO =1
+
+    int timeMillis;     //milisekundy
 
     // debug
     private static final String TAG = "MyActivity";
 
 
     private Button lock, disable, enable, rytm;
+    private TextView txtblokada;   // tekst Blokada
     public static final int RESULT_ENABLE = 11;
     private DevicePolicyManager devicePolicyManager;
     private ActivityManager activityManager;
@@ -94,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         enable = (Button) findViewById(R.id.enableBtn);
         disable = (Button) findViewById(R.id.disableBtn);
         rytm = (Button) findViewById(R.id.rytmBtn); // button rytmu
+        txtblokada = (TextView) findViewById(R.id.textBlokada);
         lock.setOnClickListener(this);
         enable.setOnClickListener(this);
         disable.setOnClickListener(this);
@@ -139,6 +144,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                     startRytmu = 1; // poziom 1 włączenie spr kodu rytmu
                     // TODO Test
                     Log.i(TAG, "OnClcik 1 pukniecie" );
+                    // odpalenie wątku przechwytywania czasu milisekund
+                 //   updateTimerText();
                 }
                 //boolean startRytmu = True;
                 //if(startRytmu == True){
@@ -162,9 +169,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                                 + "   " + mTvTimer.getText() + "\n");
                      */
                         // kopiowanie do tabeli TODO Nie działa!!!!!!
-                        int czas = Rhythm.milisekundy;
-                        rhythmUser[liczbaPukniec] = czas;
+                        //int czas = Rhythm.milisekundy;
+                        int czas = timeMillis;
+                        //rhythmUser[liczbaPukniec] = czas;
+                        rhythmUser[lpTap] = czas;
                         //rhythmUser[liczbaPukniec] = Rhythm.milisekundy;
+
+                        Log.i(TAG, "->" + lpTap + ":" + rhythmUser[lpTap] + "\n");
 
 
                         /*
@@ -181,6 +192,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                         Log.i(TAG, "onClick kolejne pukniecie" );
                     }
                     if(lpTap == liczbaPukniec ){
+
+                        // kopiowanie do tabeli TODO Nie działa!!!!!!
+                        //int czas = Rhythm.milisekundy;
+                        int czas = timeMillis;
+                        //rhythmUser[liczbaPukniec] = czas;
+                        rhythmUser[lpTap] = czas;
 
                         if(mRhythm != null) {
                             //stop the chronometer
@@ -206,6 +223,19 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
     }
 
+    public void updateTimerText(final int millis) {
+        Log.i(TAG, "updateTimer - odpala się! Timer!" );
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    //   mTvTimer.setText(timeAsText);
+                    //timeMillis = Rhythm.milisekundy;;
+                    timeMillis = millis;
+                    //mTvTime.setText(time);
+                }
+            });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -222,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
             if (active) {
                 devicePolicyManager.lockNow();
+                txtblokada.setText("Zablokowane");  //ustalenie tekstu stanu blokady
             } else {
                 Toast.makeText(this, "Włącz funkcje administratora", Toast.LENGTH_SHORT).show();
             }
@@ -271,9 +302,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             int correctSpr[] = new int [10]; //przechowuje info czy rytm dobrze wsytukano, w dobrmy intwerwale, 1 - zgadza się kodorytm
             //boolean correctSpr[] = new int [10]; //przechowuje info czy rytm dobrze wsytukano, w dobrmy intwerwale, 1 - zgadza się kodorytm
             boolean okRhythm = false;
-            for(int x=0; x<rhythmUser.length; x++ ){
+            for(int x=0; x<rhythmUser.length; x++ ){    //TODO rythmuser długosśc - 10
                 if(x < liczbaPukniec -1 ){
-                    Log.i(TAG, "MyActivity - checkRhythm - Kodorytm: " + rhythmCode[x] + "Użytkownik: " + rhythmUser[x] );
+                    Log.i(TAG, "MyActivity - checkRhythm - Kodorytm: " + rhythmCode[x] + " Użytkownik: " + rhythmUser[x] );
                 } else {
                     Log.i(TAG, "MyActivity - checkRhythm - Odwolanie do pustego indexu w tabeli = java.lang.ArrayIndexOutOfBoundsException: length=4; index=4 " );
                     break;
@@ -296,10 +327,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             if(okRhythm == true){
                 Toast.makeText(MainActivity.this, "Kodorytm poprawny!", Toast.LENGTH_SHORT).show();
                 Log.i(TAG, "MyActivity Kodorytm Ok, Oblokowano! — okRhythm: " + okRhythm);
+                txtblokada.setText("Odblokowane");  //ustalenie tekstu stanu blokady
             } else {
                 Toast.makeText(MainActivity.this, "Zły kodorytm!", Toast.LENGTH_SHORT).show();
                 Log.i(TAG, "MyActivity ZŁY Kodorytm! — okRhythm: " + okRhythm);
             }
+            lpTap = 0;
     }
 
     public void tapRhythm() {
@@ -316,6 +349,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         */
 
     }
+/*
+    public void updateTimerText(final String timeAsText) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+             //   mTvTimer.setText(timeAsText);
+                timeMillis = Rhythm.milisekundy;;
+                //mTvTime.setText(time);
+            }
+        });
+    }
+    */
 }
 
 

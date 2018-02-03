@@ -50,6 +50,16 @@
             tools:layout_editor_absoluteX="83dp"
             tools:layout_editor_absoluteY="291dp" />
 
+        <TextView
+            android:id="@+id/textBlokada"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:scrollbars="none|horizontal"
+            android:text="Blokada"
+            android:textColor="@android:color/holo_orange_dark"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
 

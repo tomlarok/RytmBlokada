@@ -110,6 +110,8 @@ public class Rhythm implements Runnable{
             ((MainActivity) mContext).updateTimerText(String.format("%02d:%02d:%02d:%03d"
                     , hours, minutes, seconds, millis));
         */
+            ((MainActivity) mContext).updateTimerText(millis);
+
             milisekundy = millis;
             //((MainActivity) mContext).updateTimerText(
 
