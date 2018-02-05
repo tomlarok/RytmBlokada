@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 /**
- * Created by tomek on 01.02.18.
+ * Created by tomlar on 01.02.18.
  */
 
 public class Rhythm implements Runnable{

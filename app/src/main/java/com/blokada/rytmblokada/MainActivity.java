@@ -15,35 +15,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.function.ToDoubleBiFunction;
+
 
 
 public class MainActivity extends AppCompatActivity implements OnClickListener{
 
-    // z Chronometer
-    /**
-     * Key for getting saved start time of tap rhythm class
-     * this is used for onResume/onPause/etc.
-     */
-    public static final String START_TIME = "START_TIME";
-    /**
-     * Same story, but to tell whether the tap rhythm was running or not
-     */
-    public static final String CHRONO_WAS_RUNNING = "CHRONO_WAS_RUNNING";
-    /**
-     * Same story, but if tap rhythm was stopped, we dont want to lose the stop time shows in
-     * the tv_timer
-     */
-    public static final String TV_TIMER_TEXT = "TV_TIMER_TEXT";
-    /**
-     * Same story, we don't want to lose recorded laps
-     */
-    public static final String ET_LAPST_TEXT = "ET_LAPST_TEXT";
-    /**
-     * Same story...keeps the value of the lap counter
-     */
-    public static final String LAP_COUNTER  = "LAP_COUNTER";
-    // koniec z Chronometer
+
     int rhythmUser[] = new int [10];
     // kod - rytm
     int rhythmCode[] = {500, 590, 590, 590};
@@ -68,8 +45,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     private ActivityManager activityManager;
     private ComponentName compName;
 
-        // z Chronometer
-    //Instance of Chronometer
+
+    //Instance of Rhythm
     Rhythm mRhythm;
 
     //keep track of how many times btn_lap was clicked
@@ -104,14 +81,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         disable.setOnClickListener(this);
         rytm.setOnClickListener(this);  // button rytmu
 
-        // z Chronometru
-        //mEtLaps.setEnabled(false); //prevent the et_laps to be editable
-        //mSvLaps = (ScrollView) findViewById(R.id.sv_lap);
+
 
         // TODO Test
         Log.i(TAG, "Działa coś!!!!!!!!" );
 
-        //btn_start click handler
         rytm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,10 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
                     //start the chronometer!
                     mRhythm.start();
-                /*
-                    //clear the perilously populated et_laps
-                    mEtLaps.setText(""); //empty string!
-                */
+
                     //reset the lap counter
                     mLapCounter = 1;
 
@@ -157,17 +128,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
                         //if chrono is not running we shouldn't capture the lap!
                         if(mRhythm == null) {
-                  /*
-                    Toast.makeText(mContext
-                            , R.string.warning_lap_button, Toast.LENGTH_SHORT).show();
-                    */
+
                             return; //do nothing!
                         }
-                     /*
-                        //we just simply copy the current text of tv_timer and append it to et_laps
-                        mEtLaps.append("LAP " + String.valueOf(mLapCounter++)
-                                + "   " + mTvTimer.getText() + "\n");
-                     */
+
                         // kopiowanie do tabeli TODO Nie działa!!!!!!
                         //int czas = Rhythm.milisekundy;
                         int czas = timeMillis;
@@ -178,15 +142,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                         Log.i(TAG, "->" + lpTap + ":" + rhythmUser[lpTap] + "\n");
 
 
-                        /*
-                        //scroll to the bottom of et_laps
-                        mSvLaps.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSvLaps.smoothScrollTo(0, mEtLaps.getBottom());
-                            }
-                        });
-                        */
                         lpTap ++; //zwieksza sie liczba pukniec
                         // TODO Test
                         Log.i(TAG, "onClick kolejne pukniecie" );
@@ -219,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 }
             }
         });
-        // koniec z Chronometru
+
 
     }
 
@@ -349,18 +304,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         */
 
     }
-/*
-    public void updateTimerText(final String timeAsText) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-             //   mTvTimer.setText(timeAsText);
-                timeMillis = Rhythm.milisekundy;;
-                //mTvTime.setText(time);
-            }
-        });
-    }
-    */
+
 }
 
 
